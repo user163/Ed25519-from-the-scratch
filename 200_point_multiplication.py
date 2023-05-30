@@ -57,7 +57,7 @@ def extended_homogeneous_to_affine(Q):
 def point_multiplication(s, P):
     Q = (0, 1, 1, 0)                  # neutral element
     bits = bin(s)[2:]                 # bit encoding of s
-    bitsPadded = bits.rjust(256, '0') # the bit representation of all scalars is extended with leading 0 to 255 bit 
+    bitsPadded = bits.rjust(256, '0') # the bit representation of all scalars is extended with leading 0 to 256 bit 
     for b in bitsPadded:              # for each step, the same operations are done, no matter if the bit is 0 or 1
         if b == '0':
             P = add_extended_homogeneous(Q, P)
