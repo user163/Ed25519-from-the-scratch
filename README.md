@@ -90,7 +90,7 @@ M1 is therefore primarily relevant for X25519 and not for Ed25519. Of course, if
 - M2:  
 Curves with a cofactor unequal 1 (like Curve25519 or edwards25519 with the cofactor 8) have besides the subgroup of large order (l) also subgroups of smaller order. For the cofactor 8 these are the orders 1, 2, 4 and 8. If a point from this group is multiplied by 8, the identity/neutral element I results.   
 Setting the bits according to M2 corresponds to a left shift by 8 bits and thus a multiplication by 8.   
-For X25519, s is multiplied by the public key of the other side. In a small soubgroup attack, the other side sends keys from small order subgroups and can use them to obtain information about the secret key. By setting the bits according to M2 the generation of the shared secret becomes: s*soG = s'*8*soG = s'*I = I. I.e. if the point multiplication yields the identity element, this means that the public key soG belongs to a small order subgroup and the processing has to be aborted (attempted attack or mistake on the other side).  
+For X25519, s is multiplied by the public key of the other side. In a small soubgroup attack, the other side sends keys from small order subgroups and can use them to obtain information about the secret key. By setting the bits according to M2 the generation of the shared secret becomes: s * soG = s' * 8 * soG = s' * I = I (I denotes the identity element). I.e. if the point multiplication yields the identity element, this means that the public key soG belongs to a small order subgroup and the processing has to be aborted (attempted attack or mistake on the other side).  
 As can be seen from the description, setting the bits according to M2 is only relevant for X25519, but not for Ed25519.
 
 Further reading:  
