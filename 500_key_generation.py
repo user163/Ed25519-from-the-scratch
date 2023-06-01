@@ -93,16 +93,16 @@ def clamp(data_b): # data_b in little endian order
 
 import hashlib
 
-def secret_expand(secret):
-    if len(secret) != 32:
+def secret_expand(secret_b):
+    if len(secret_b) != 32:
         raise Exception("Bad size of private key")
-    hash_b = hashlib.sha512(secret).digest()   
+    hash_b = hashlib.sha512(secret_b).digest()   
     a_b = clamp(hash_b[:32])
     a = le_decode_to_number(a_b)
     return (a, hash_b[32:])
 
-def get_public_from_secret(secret):
-    (a, dummy) = secret_expand(secret)
+def get_public_from_secret(secret_b):
+    (a, dummy) = secret_expand(secret_b)
     G_2 = (Gx, Gy)
     G_4 = affine_to_extended_homogeneous(G_2)
     return compress_point(point_multiplication(a, G_4))
