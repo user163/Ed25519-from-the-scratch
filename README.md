@@ -36,7 +36,9 @@ The tests in *point_multiplication.py* perform the point multiplication for a se
 
 **Part 3: Point compression and decompression**
 
-Ed25519 encodes the x and y coordinate of a point to 32 bytes (because of x and y mod p) in little endian order. This must be taken into account when converting integer -> bytes and bytes -> integer.
+In *300_point_compression.py*, point compression and decompression are implemented.
+
+Ed25519 encodes the x and y coordinate of a point to 32 bytes (because of x and y mod p) in **little endian order**. This must be taken into account when converting integer -> bytes and bytes -> integer.
 
 Also, Ed25519 compresses points. This results in a shorter public key (32 instead of 64 bytes). The y coordinate is used. Because of y mod p, the most significant bit (ms bit) in the most significant byte (ms byte) is not set. This location is used to store the parity (even/odd) of the x coordinate. x is even/odd if the least significant bit (ls bit) in least significant byte (ls byte) is 0/1:
 
@@ -56,6 +58,8 @@ There is no mathematical necessity for the y coordinate to be used, the x coordi
 
 When decompressing a point, it is exploited that the modulus is congruent to 5 modulo 8 (p mod 8 = 5) and the Legendre solution is used, see [Prime or prime power modulus][3_2]. The details are described in [RFC 8032, Chapter 5.1.3 Decoding][3_3] and an example implementation in Python is given in [RFC 8032, Chapter 6 Ed25519 Python Illustration][3_4].
 A derivation or more in-depth explanation of the mathematical formulas can be found in [Re-Deriving the edwards25519 Decoding Formulas][3_5]. 
+
+The tests compress and decompress the base point and a number of other points.
 
 [1]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Addition_on_twisted_Edwards_curves
 [2]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Doubling_on_twisted_Edwards_curves
