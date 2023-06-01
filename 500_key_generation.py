@@ -93,44 +93,44 @@ def clamp(data_b): # data_b in little endian order
 
 import hashlib
 
-def secret_expand(secret_b):
-    if len(secret_b) != 32:
-        raise Exception("Bad size of private key")
-    hash_b = hashlib.sha512(secret_b).digest()   
+def secret_expand(secret_key_b):
+    if len(secret_key_b) != 32:
+        raise Exception("Bad size of secret key")
+    hash_b = hashlib.sha512(secret_key_b).digest()   
     a_b = clamp(hash_b[:32])
     a = le_decode_to_number(a_b)
     return (a, hash_b[32:])
 
-def get_public_from_secret(secret_b):
-    (a, dummy) = secret_expand(secret_b)
+def get_public_from_secret(secret_key_b):
+    (a, dummy) = secret_expand(secret_key_b)
     G_2 = (Gx, Gy)
     G_4 = affine_to_extended_homogeneous(G_2)
     return compress_point(point_multiplication(a, G_4))
 
 #
 # test 1:
-# seed:   000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f 
-# public: 03a107bff3ce10be1d70dd18e74bc09967e4d6309ba50d5f1ddc8664125531b8
+# secret key:   000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f 
+# public key:   03a107bff3ce10be1d70dd18e74bc09967e4d6309ba50d5f1ddc8664125531b8
 #
-secret_b = bytes.fromhex('000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f')
-public_b = get_public_from_secret(secret_b)
-print(public_b.hex())
+secret_key_b = bytes.fromhex('000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f')
+public_key_b = get_public_from_secret(secret_key_b)
+print(public_key_b.hex())
 
 #
 # test 2:
-# seed:   4b5c7dad2f986ed376686dddd3810ada00f1ef467b3eef25c3234bd1f938b2b0 
-# public: c0b3fdec8b02bec26530e81176030da02ba74e21f9140ac3b2158c5e1b72608c
+# secret key:   4b5c7dad2f986ed376686dddd3810ada00f1ef467b3eef25c3234bd1f938b2b0 
+# public key:   c0b3fdec8b02bec26530e81176030da02ba74e21f9140ac3b2158c5e1b72608c
 #
-secret_b = bytes.fromhex('4b5c7dad2f986ed376686dddd3810ada00f1ef467b3eef25c3234bd1f938b2b0')
-public_b = get_public_from_secret(secret_b)
-print(public_b.hex())
+secret_key_b = bytes.fromhex('4b5c7dad2f986ed376686dddd3810ada00f1ef467b3eef25c3234bd1f938b2b0')
+public_key_b = get_public_from_secret(secret_key_b)
+print(public_key_b.hex())
 
 #
 # test 3:
-# seed:   random 
-# public: ...
+# secret key:   random 
+# public key:   ...
 #
 import os
-secret_b = os.urandom(32)
-public_b = get_public_from_secret(secret_b)
-print(public_b.hex())
+secret_key_b = os.urandom(32)
+public_key_b = get_public_from_secret(secret_key_b)
+print(public_key_b.hex())
