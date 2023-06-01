@@ -108,7 +108,7 @@ The Montgomery curve curve25519 (on which X25519 is performed) and the twisted E
     public = s_clamped * G						public' = s_clamped * G'
 ```
 
-During the transformation, s_clamped does not change. Since clamping twice does not change anything, the implicit clamping of X25519 does not change s_clamped. However, this does not mean that the implicit clamping in the context of X25519 is not required. It is necessary with respect to fresh X25519 secret keys (i.e. X25519 secret keys that have been generated with a PRNG and are therefore not clapmed).
+During the transformation, s_clamped does not change. Since clamping twice does not change anything, the implicit clamping of X25519 does not change s_clamped. However, this does not mean that the implicit clamping in the context of X25519 is not required. It is necessary with respect to fresh X25519 secret keys (i.e. X25519 secret keys that have been generated with a PRNG and are therefore not clamped).
 
 By the way, the generation of Ed25519 keys from X25519 keys is not possible, because for this a seed would have to be found whose first 32 bytes of its SHA512 hash would have to correspond to the (clamped or unclamped) s_clamped and this is not possible because cryptographic hash functions (like SHA512) are irreversible.  
 
