@@ -122,7 +122,7 @@ Further literature on the subject of clamping:
 
 **Part 5: Generation of the secret and public key**
 
-In Ed25515 the secret key (or seed) is a randomly (i.e. with a CSPRNG) generated 32 bytes sequence. This is hashed with SHA-512. The first 32 bytes are first clamped and then used to derive the public key. The second 32 bytes are needed for signing and are used as prefix to the message to be signed (more about this in the part Signing/Verification).
+In Ed25519 the secret key (or seed) is a randomly (i.e. with a CSPRNG) generated 32 bytes sequence. This is hashed with SHA-512. The first 32 bytes are first clamped and then used to derive the public key. The second 32 bytes are needed for signing and are used as prefix to the message to be signed (more about this in the part Signing/Verification).
 
 The public key is compressed (32 bytes, little endian).
 
