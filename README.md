@@ -119,6 +119,16 @@ Further literature on the subject of clamping:
 [*An Explainer On Ed25519 Clamping*][4_3]  
 [*What’s the Curve25519 clamping all about?*][4_4]
 
+---------------
+
+**Part 5: Generation of the secret and public key**
+
+In Ed25515 the secret key (or seed) is a randomly (i.e. with a CSPRNG) generated 32 bytes sequence. This is hashed with SHA-512. The first 32 bytes are first clamped and then used to derive the public key. The second 32 bytes are needed for signing and are used as prefix to the message to be signed (more about this in the part Signing/Verification).
+
+The public key is compressed (32 bytes, little endian).
+
+Sometimes the combination secret key|public key, i.e. a 64 bytes value, is specified as secret key, see [*Why are NaCl secret keys 64 bytes for signing, but 32 bytes for box?*][5_1].  
+
 [1]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Addition_on_twisted_Edwards_curves
 [2]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Doubling_on_twisted_Edwards_curves
 [3]: https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.4
@@ -142,3 +152,4 @@ Further literature on the subject of clamping:
 [4_3]: https://www.jcraige.com/an-explainer-on-ed25519-clamping
 [4_4]: https://neilmadden.blog/2020/05/28/whats-the-curve25519-clamping-all-about/
 
+[5_1]: https://crypto.stackexchange.com/q/54353
