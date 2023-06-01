@@ -113,14 +113,7 @@ Implicit clamping in the context of X25519 is of course necessary with respect t
 
 By the way, the generation of Ed25519 keys (s_clamped) from X25519 keys (s_clamped') is not possible, because for this a seed would have to be found whose first 32 bytes of its SHA512 hash would have to correspond to the (clamped or unclamped) s_clamped and this is not possible because cryptographic hash functions (like SHA512) are irreversible.  
 
-Implementation:
-
-```
-scalar_b = bytearray(sha512hash[:32]) # in little endian order
-scalar_b[0] &= 248  # 0.  byte: set the three least significant bits to 0 
-scalar_b[31] &= 127 # 31. byte: set the most significant bit to 0
-scalar_b[31] |= 64  #           ...and the second-most significant bit to 1
-```
+In *400_clamping.py* clamping and its test is implemented.
 
 Further literature on the subject of clamping:  
 [*An Explainer On Ed25519 Clamping*][4_3]  
