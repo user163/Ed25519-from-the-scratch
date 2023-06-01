@@ -129,6 +129,8 @@ The public key is compressed (32 bytes, little endian).
 
 Sometimes the combination secret key|public key, i.e. a 64 bytes value, is specified as secret key, see [*Why are NaCl secret keys 64 bytes for signing, but 32 bytes for box?*][5_1].  
 
+In *500_key_generation.py* the generation of the secret and public key is implemented. The first two tests use test vectors, the last test shows the key generation using a random secret key.
+
 [1]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Addition_on_twisted_Edwards_curves
 [2]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Doubling_on_twisted_Edwards_curves
 [3]: https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.4
