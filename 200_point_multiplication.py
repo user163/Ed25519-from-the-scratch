@@ -55,6 +55,8 @@ def extended_homogeneous_to_affine(Q):
     y1 = (Y1 * Z1_inv) % p
     return (x1, y1)
 
+# new ###############################################################################################
+
 # Montgomery Ladder, time constant for scalars up to 256 bits
 def point_multiplication(s, P):
     Q = (0, 1, 1, 0)                  # neutral element
