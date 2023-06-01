@@ -116,10 +116,10 @@ By the way, the generation of Ed25519 keys (s_clamped) from X25519 keys (s_clamp
 Implementation:
 
 ```
-scalar = bytearray(sha512hash[:32])
-scalar[0] &= 248  # 0.  byte: set the three least significant bits to 0 
-scalar[31] &= 127 # 31. byte: set the most significant bit to 0
-scalar[31] |= 64  #           ...and the second-most significant bit to 1
+scalar_b = bytearray(sha512hash[:32]) # in little endian order
+scalar_b[0] &= 248  # 0.  byte: set the three least significant bits to 0 
+scalar_b[31] &= 127 # 31. byte: set the most significant bit to 0
+scalar_b[31] |= 64  #           ...and the second-most significant bit to 1
 ```
 
 Further literature on the subject of clamping:  
