@@ -98,20 +98,19 @@ Further reading:
 [*Order of subgroups formed by Elliptic Curves with a Cofactor*][4_2]
 
 Why is clamping used for Ed25519 when it is actually only relevant for X25519?  
-The Montgomery curve curve25519 (on which X25519 is performed) and the twisted Edwards curve edwards25519 (on which Ed25519 is performed) are related to each other: birationally equivalence. This means that there is a mapping, i.e. for practice Ed25519 keys can be converted to X25519 keys:
+The Montgomery curve curve25519 (on which X25519 is performed) and the twisted Edwards curve edwards25519 (on which Ed25519 is performed) are related to each other: birationally equivalence. This means that there is a mapping, i.e. for practice Ed25519 keys can be transformed to X25519 keys:
 
 ```
     edwards25519 (Ed25519)			->			curve25519 (X25519)
     --------------------------------------------------------------------------------------------
     seed (secret key in the context of Ed25519)
-    s_clamped								s_clamped' (secret key in the context of X25519)
-    public = s_clamped*G						public' = s_clamped'*G'
+    s_clamped								s_clamped (secret key in the context of X25519)
+    public = s_clamped * G						public' = s_clamped * G'
 ```
 
-With the transformation s_clamped -> s_clamped' the clamping remains, i.e. M1 and M2 are also fulfilled for s_clamped'. Therefore, implicitly clamping in the context of X25119 does not change the value (if clamping under X25519 would change the value, the relationship between both keys would be lost).  
-Implicit clamping in the context of X25519 is of course necessary with respect to fresh X25519 secret keys (i.e. X25519 secret keys that have been generated with a PRNG and are therefore not clapmed).
+During the transformation, s_clamped does not change. Since clamping twice does not change anything, the implicit clamping of X25519 does not change s_clamped. However, this does not mean that the implicit clamping in the context of X25519 is not required. It is necessary with respect to fresh X25519 secret keys (i.e. X25519 secret keys that have been generated with a PRNG and are therefore not clapmed).
 
-By the way, the generation of Ed25519 keys (s_clamped) from X25519 keys (s_clamped') is not possible, because for this a seed would have to be found whose first 32 bytes of its SHA512 hash would have to correspond to the (clamped or unclamped) s_clamped and this is not possible because cryptographic hash functions (like SHA512) are irreversible.  
+By the way, the generation of Ed25519 keys from X25519 keys is not possible, because for this a seed would have to be found whose first 32 bytes of its SHA512 hash would have to correspond to the (clamped or unclamped) s_clamped and this is not possible because cryptographic hash functions (like SHA512) are irreversible.  
 
 In *400_clamping.py* clamping and its test is implemented.
 
