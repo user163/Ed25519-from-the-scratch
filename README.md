@@ -32,6 +32,31 @@ Since the add and doubling operations of the extended homogeneous formulas are t
 
 The tests in *point_multiplication.py* perform the point multiplication for a set of test vectors.
 
+---------
+
+**Part 3: Point compression and decompression**
+
+Ed25519 encodes the x and y coordinate of a point to 32 bytes (because of x and y mod p) in little endian order. This must be taken into account when converting integer -> bytes and bytes -> integer.
+
+Also, Ed25519 compresses points. This results in a shorter public key (32 instead of 64 bytes). The y coordinate is used. Because of y mod p, the most significant bit (ms bit) in the most significant byte (ms byte) is not set. This location is used to store the parity (even/odd) of the x coordinate. x is even/odd if the least significant bit (ls bit) in least significant byte (ls byte) is 0/1:
+
+```none
+x, little endian: 0. byte (ls),            1. byte, ..., 31. byte (ms)
+                  _ _ _ _   _ _ _ P
+             ms bit               ls bit
+					  
+y, little endian: 0. byte (ls),            1. byte, ..., 31. byte (ms)
+                                                         0 1 _ _   _ _ _ _ 
+                                                    ms bit               ls bit
+```
+
+I.e. the compressed key has a length of 256 bits (32 bytes), (x and y coordinates have a length of 255 bits (32 bytes) each).
+																 
+There is no mathematical necessity for the y coordinate to be used, the x coordinate can be used as well. According to [this post][3_1] on SE the choice of the y coordinate has patent reasons.
+
+When decompressing a point, it is exploited that the modulus is congruent to 5 modulo 8 (p mod 8 = 5) and the Legendre solution is used, see [Prime or prime power modulus][3_2]. The details are described in [RFC 8032, Chapter 5.1.3 Decoding][3_3] and an example implementation in Python is given in [RFC 8032, Chapter 6 Ed25519 Python Illustration][3_4].
+A derivation or more in-depth explanation of the mathematical formulas can be found in [Re-Deriving the edwards25519 Decoding Formulas][3_5]. 
+
 [1]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Addition_on_twisted_Edwards_curves
 [2]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Doubling_on_twisted_Edwards_curves
 [3]: https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.4
@@ -43,3 +68,9 @@ The tests in *point_multiplication.py* perform the point multiplication for a se
 [2_2]: https://neilmadden.blog/2020/05/28/whats-the-curve25519-clamping-all-about/
 [2_3]: https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication#Montgomery_ladder
 [2_4]: https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication#Double-and-add
+
+[3_1]: https://crypto.stackexchange.com/q/106106
+[3_2]: https://en.wikipedia.org/wiki/Quadratic_residue#Prime_or_prime_power_modulus
+[3_3]: https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.3
+[3_4]: https://datatracker.ietf.org/doc/html/rfc8032#section-6
+[3_5]: https://words.filippo.io/dispatches/edwards25519-formulas/
