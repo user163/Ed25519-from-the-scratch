@@ -61,6 +61,71 @@ A derivation or more in-depth explanation of the mathematical formulas can be fo
 
 The tests compress and decompress the base point and a number of other points.
 
+--------------
+
+**Part 4: Clamping**
+
+Clamping is the modification of certain bits of the scalar s used to generate the public key. Note that for Ed25519 the scalar (unlike X25519) is not the secret key (or seed), but the first 32 bytes of the SHA-512 hashed secret key (this is described in more detail in the part *Key generation*).  
+Clamping is done for security reasons.
+
+The following modifications are made:
+- M1: The most significant bit in the most significant byte is set to 0, and the second most significant bit is set to 1.
+- M2: The three least significant bits in the least significant byte are set to 0:
+
+scalar s, in little endian order (used by Ed25519):
+
+```
+      0. byte (ls byte), 1. byte, ...		31. byte (ms byte)
+      _ _ _ _   _ 0 0 0           		0 1 _ _   _ _ _ _
+ ms bit               ls bit               ms bit               ls bit
+```
+
+What is the purpose of M1 and M2?
+- M1:   
+M1 ensures that all keys have the same most significant bit during point multiplication. This ensures that some implementations of the Montgomery Ladder, which are not time constant with different most significant bits, are also time constant, so that no information is leaked to the scalar s. This bit manipulation was already mentioned in Part 2: Point Multiplication.
+
+  In the context of Ed25519, multiplication is done with a fixed point (namely the base point), for which there are more performant algorithms than the Montgomery Ladder. In the context of X25519, however, multiplication is done with different points (namely the public keys of the respective opposite sides). In this case, the Montgomery Ladder is still the best performing algorithm.   
+M1 is therefore primarily relevant for X25519 and not for Ed25519. Of course, if an implementation of Ed25519 uses the Montgomery Ladder (like this one), it is also relevant for Ed25519.
+
+- M2:  
+Curves with a cofactor unequal 1 (like Curve25519 or edwards25519 with the cofactor 8) have besides the subgroup of large order (l) also subgroups of smaller order. For the cofactor 8 these are the orders 1, 2, 4 and 8. If a point from this group is multiplied by 8, the identity/neutral element I results.   
+Setting the bits according to M2 corresponds to a left shift by 8 bits and thus a multiplication by 8.   
+For X25519, s is multiplied by the public key of the other side. In a small soubgroup attack, the other side sends keys from small order subgroups and can use them to obtain information about the secret key. By setting the bits according to M2 the generation of the shared secret becomes: s*soG = s'*8*soG = s'*I = I. I.e. if the point multiplication yields the identity element, this means that the public key soG belongs to a small order subgroup and the processing has to be aborted (attempted attack or mistake on the other side).  
+As can be seen from the description, setting the bits according to M2 is only relevant for X25519, but not for Ed25519.
+
+Further reading:  
+[*Order and Cofactor of Elliptic Curve* and following sections][4_1]  
+[*Order of subgroups formed by Elliptic Curves with a Cofactor*][4_2]
+
+Why is clamping used for Ed25519 when it is actually only relevant for X25519?  
+The Montgomery curve curve25519 (on which X25519 is performed) and the twisted Edwards curve edwards25519 (on which Ed25519 is performed) are related to each other: birationally equivalence. This means that there is a mapping, i.e. for practice Ed25519 keys can be converted to X25519 keys:
+
+```
+    edwards25519 (Ed25519)			->			curve25519 (X25519)
+    --------------------------------------------------------------------------------------------
+    seed (secret key in the context of Ed25519)
+    s_clamped								s_clamped' (secret key in the context of X25519)
+    public = s_clamped*G						public' = s_clamped'*G'
+```
+
+With the transformation s_clamped -> s_clamped' the clamping remains, i.e. M1 and M2 are also fulfilled for s_clamped' (so that the name is also justified in the context of X25519 ;-). Therefore, implicitly clamping in the context of X25119 does not change the value (if clamping under X25519 would change the value, the relationship between both keys would be lost).  
+Implicit clamping in the context of X25519 is of course necessary with respect to fresh X25519 secret keys (i.e. X25519 secret keys that have been generated with a PRNG and are therefore not clapmed).
+
+By the way, the generation of Ed25519 keys (s_clamped) from X25519 keys (s_clamped') is not possible, because for this a seed would have to be found whose first 32 bytes of its SHA512 hash would have to correspond to the (clamped or unclamped) s_clamped and this is not possible because cryptographic hash functions (like SHA512) are irreversible.  
+
+Implementation:
+
+```
+scalar = bytearray(sha512hash[:32])
+scalar[0] &= 248  # 0.  byte: set the three least significant bits to 0 
+scalar[31] &= 127 # 31. byte: set the most significant bit to 0
+scalar[31] |= 64  #           ...and the second-most significant bit to 1
+```
+
+Further literature on the subject of clamping:  
+[*An Explainer On Ed25519 Clamping*][4_3]  
+[*What’s the Curve25519 clamping all about?*][4_4]
+
 [1]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Addition_on_twisted_Edwards_curves
 [2]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Doubling_on_twisted_Edwards_curves
 [3]: https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.4
@@ -78,3 +143,9 @@ The tests compress and decompress the base point and a number of other points.
 [3_3]: https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.3
 [3_4]: https://datatracker.ietf.org/doc/html/rfc8032#section-6
 [3_5]: https://words.filippo.io/dispatches/edwards25519-formulas/
+
+[4_1]: https://cryptobook.nakov.com/asymmetric-key-ciphers/elliptic-curve-cryptography-ecc#order-and-cofactor-of-elliptic-curve
+[4_2]: https://crypto.stackexchange.com/questions/75900/order-of-subgroups-formed-by-elliptic-curves-with-a-cofactor
+[4_3]: https://www.jcraige.com/an-explainer-on-ed25519-clamping
+[4_4]: https://neilmadden.blog/2020/05/28/whats-the-curve25519-clamping-all-about/
+
