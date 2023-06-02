@@ -140,15 +140,15 @@ Signing, input: secretKey, msg
 - h = SHA512(secretKey); a = clamped(h[:32]); prefix = h[32:]
 - A = a * G
 - r = SHA512(prefix + msg) mod l
-- Rs = r * G
+- R = r * G
 - h = SHA512(Rs + A + msg) mod l
 - s = (r + h*a) mod l
 - signature Rs, s
 
 Verifying: input: publicKey, msg, Rs, s
-- h = SHA512(Rs + publicKey + msg) mod l
+- h = SHA512(R + publicKey + msg) mod l
 - sB = s * G
-- sC = Rs + h * publicKey
+- sC = R + h * publicKey
 - verified = (sB == sC)
 
 Both is implemented in *600_signing_verifying.py*, the tests apply the testvectors from [RFC8032, 7.1.  Test Vectors for Ed25519][6_5]. 
