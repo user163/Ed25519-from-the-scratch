@@ -134,6 +134,15 @@ In *500_key_generation.py* the generation of the secret and public key is implem
 
 **Part 6: Signing and Verifying**
 
+Signing, input: secretKey, msg
+- h = SHA512(secretKey); a = clamped(h[:32]); prefix = h[32:]
+- A = a * G
+- r = SHA512(prefix + msg) mod l
+- Rs = r * G
+- h = SHA512(Rs + A + msg) mod l
+- s = (r + h*a) mod l
+- signature Rs, s
+
 
 [1]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Addition_on_twisted_Edwards_curves
 [2]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Doubling_on_twisted_Edwards_curves
