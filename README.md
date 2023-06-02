@@ -134,6 +134,8 @@ In *500_key_generation.py* the generation of the secret and public key is implem
 
 **Part 6: Signing and Verifying**
 
+Signing is described in [RFC 8032, 5.1.6. Sign][6.1] and in [EdDSA Sign][6_2], verifying in [RFC 8032, 5.1.7. Verify][6_3] and in [EdDSA Verify Signature][6_4].
+
 Signing, input: secretKey, msg
 - h = SHA512(secretKey); a = clamped(h[:32]); prefix = h[32:]
 - A = a * G
@@ -173,3 +175,8 @@ Verifying: input: publicKey, msg, Rs, s
 [4_4]: https://neilmadden.blog/2020/05/28/whats-the-curve25519-clamping-all-about/
 
 [5_1]: https://crypto.stackexchange.com/q/54353
+
+[6_1]: https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.6
+[6_2]: https://cryptobook.nakov.com/digital-signatures/eddsa-and-ed25519#eddsa-sign
+[6_3]: https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.7
+[6_4]: https://cryptobook.nakov.com/digital-signatures/eddsa-and-ed25519#eddsa-verify-signature
