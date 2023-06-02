@@ -1,6 +1,6 @@
 # Ed25519-from-the-scratch
 
-Implementation of the different parts of Ed25519. This Python implementation is not intended for a real world application, but to illustrate the different parts of Ed25519 and their interaction.
+Implementation of the different parts of Ed25519. This Python implementation is not intended for a real world application, but to illustrate the different pieces of Ed25519 and how they interact.
 
 Ed25519 is described in [RFC 8032][4].
 
