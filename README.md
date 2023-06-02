@@ -151,6 +151,8 @@ Verifying: input: publicKey, msg, Rs, s
 - sC = Rs + h * publicKey
 - verified = (sB == sC)
 
+Both is implemented in *600_signing_verifying.py*, the tests apply the testvectors from [RFC8032, 7.1.  Test Vectors for Ed25519][6_5]. 
+
 [1]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Addition_on_twisted_Edwards_curves
 [2]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Doubling_on_twisted_Edwards_curves
 [3]: https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.4
@@ -180,3 +182,4 @@ Verifying: input: publicKey, msg, Rs, s
 [6_2]: https://cryptobook.nakov.com/digital-signatures/eddsa-and-ed25519#eddsa-sign
 [6_3]: https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.7
 [6_4]: https://cryptobook.nakov.com/digital-signatures/eddsa-and-ed25519#eddsa-verify-signature
+[6_5]: https://datatracker.ietf.org/doc/html/rfc8032#section-7.1
