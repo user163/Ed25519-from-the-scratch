@@ -142,7 +142,7 @@ Signing, input: secretKey, msg
 - r = SHA512(prefix + msg) mod l
 - R = r * G
 - h = SHA512(R + A + msg) mod l
-- s = (r + h*a) mod l
+- s = (r + h * a) mod l
 - signature R, s
 
 Verifying: input: publicKey, msg, Rs, s
