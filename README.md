@@ -143,6 +143,11 @@ Signing, input: secretKey, msg
 - s = (r + h*a) mod l
 - signature Rs, s
 
+Verifying: input: publicKey, msg, Rs, s
+- h = SHA512(Rs + publicKey + msg) mod l
+- sB = s * G
+- sC = Rs + h * publicKey
+- verified = (sB == sC)
 
 [1]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Addition_on_twisted_Edwards_curves
 [2]: https://en.wikipedia.org/wiki/Twisted_Edwards_curve#Doubling_on_twisted_Edwards_curves
