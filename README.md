@@ -134,7 +134,7 @@ In *500_key_generation.py* the generation of the secret and public key is implem
 
 **Part 6: Signing and Verifying**
 
-Signing is described in [RFC 8032, 5.1.6. Sign][6.1] and in [EdDSA Sign][6_2], verifying in [RFC 8032, 5.1.7. Verify][6_3] and in [EdDSA Verify Signature][6_4].
+Signing is described in [RFC 8032, 5.1.6. Sign][6_1] and in [EdDSA Sign][6_2], verifying in [RFC 8032, 5.1.7. Verify][6_3] and in [EdDSA Verify Signature][6_4].
 
 Signing, input: secretKey, msg
 - h = SHA512(secretKey); a = clamped(h[:32]); prefix = h[32:]
