@@ -141,7 +141,7 @@ Signing, input: secretKey, msg
 - A = a * G
 - r = SHA512(prefix + msg) mod l
 - R = r * G
-- h = SHA512(Rs + A + msg) mod l
+- h = SHA512(R + A + msg) mod l
 - s = (r + h*a) mod l
 - signature Rs, s
 
