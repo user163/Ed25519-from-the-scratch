@@ -119,7 +119,7 @@ The Montgomery curve curve25519 (on which X25519 is performed) and the twisted E
 
 Note that s_clamped does not change during the transformation. The clamping on the Ed25519 side ensures that the transformed X25519 secret key is also clamped. The X25519 algorithm includes the same clamping so that fresh X25519 secret keys (i.e. X25519 secret keys generated with a CSPRNG) are also clamped. For a transformed X25519 secret key, this means double clamping, which, however, has no effect on the transformed X25519 secret key, since a clamped secret key that is clamped again remains unchanged.
 
-By the way, the generation of Ed25519 keys from X25519 keys is not possible, because for this a seed would have to be found whose first 32 bytes of its SHA512 hash would have to correspond to the (clamped or unclamped) s_clamped and this is not possible because cryptographic hash functions (like SHA512) are not reversible.  
+The reverse, i.e. the generation of Ed25519 keys from X25519 keys is not possible, because for this a seed would have to be found whose first 32 bytes of its SHA512 hash would have to correspond to the (clamped or unclamped) s_clamped and this is not possible because cryptographic hash functions (like SHA512) are not reversible.  
 
 In *400_clamping.py* clamping and its test is implemented.
 
